@@ -1,4 +1,4 @@
-const MAX_BOARD_LINES = 5, MAX_BOARD_COLS = 40, HUNDRED = 100, ONE_SECOND = 1000;
+const MAX_BOARD_LINES = 5, MAX_BOARD_COLS = 40, ONE_SECOND = 1000;
 let time = 0;
 let lineDino = MAX_BOARD_LINES - 1;
 let colDino = 2;
@@ -7,14 +7,14 @@ let lineObj = MAX_BOARD_LINES - 1;
 let dinoGoesDown = 0;
 let noObjects = 0;
 let movingUp, movingDown;
+let gameOver = 0;
 
 function generateButtons() {
     for (let i = 0; i < MAX_BOARD_LINES; ++i) {
         for (let j = 0; j < MAX_BOARD_COLS; ++j) {
             const button = document.createElement("button");
             button.type = "button";
-            button.id = i * HUNDRED + j;
-            //button.id = i + "-" + j;
+            button.id = i + "-" + j;
             button.innerText = '-';
             document.body.appendChild(button);    
             if (i === MAX_BOARD_LINES - 1 && j === colDino) {
@@ -38,32 +38,32 @@ function startStopWatch() {
     setInterval(moveObjectsLeft, ONE_SECOND / 10);
 }
 
-function increaseTimeAndAddMoreObjects() {
+function dinoColided() {
     for (let i = 0; i <= noObjects; ++i) {
         if (lineDino === lineObj && colDino === colObject[i]) {
-            //return time;
-            return;
+            gameOver = 1;
         }
     }
-    ++time;
-    if (time % 2 === 0) {
-        colObject[++noObjects] = MAX_BOARD_COLS - 1;
+}
+
+function increaseTimeAndAddMoreObjects() {
+    dinoColided();
+    if (gameOver === 0) {
+        ++time;
+        if (time % 2 === 0) {
+            colObject[++noObjects] = MAX_BOARD_COLS - 1;
+        }
     }
     document.getElementById('Score-text').innerHTML = time;
 }
 
 function moveObjectsLeft() {
     for (let i = 0; i <= noObjects; ++i) {
-        if (lineDino === lineObj && colDino === colObject[i]) {
-            return;
-        }
-        if (colObject[i] >= 0) {
-            const strangeObject = document.getElementById(lineObj * HUNDRED
-                + colObject[i]);
-            strangeObject.style.backgroundColor = "red";
+        if (colObject[i] >= 0 && gameOver === 0) {
+            const object = document.getElementById(lineObj + "-" + colObject[i]);
+            object.style.backgroundColor = "red";
             if (colObject[i] != MAX_BOARD_COLS - 1) {
-                const prevObject = document.getElementById(lineObj * HUNDRED 
-                    + colObject[i] + 1);
+                const prevObject = document.getElementById(lineObj + "-" + (colObject[i] + 1));
                 prevObject.style.backgroundColor = "gray";
             }
         }
@@ -77,7 +77,7 @@ function dinosaurJumps() {
 
     function checkKey(e) {
         textContent = e.code;
-        if (textContent === "ArrowUp") {
+        if (textContent === "ArrowUp" && gameOver === 0) {
             dinoGoesDown = 0;
             movingUp = setInterval(dinoMovesUp, ONE_SECOND / 10);
         }
@@ -85,9 +85,9 @@ function dinosaurJumps() {
 
     function dinoMovesUp() {
         if (dinoGoesDown === 0) {
-            const dinosaur = document.getElementById((lineDino - 1) * HUNDRED + colDino);
+            const dinosaur = document.getElementById((lineDino - 1) + "-" + colDino);
             dinosaur.style.backgroundColor = "green";
-            const prevDino = document.getElementById(lineDino * HUNDRED + colDino);
+            const prevDino = document.getElementById(lineDino + "-" + colDino);
             prevDino.style.backgroundColor = "gray"; 
             --lineDino;  
         }  
@@ -100,9 +100,9 @@ function dinosaurJumps() {
      
     function dinoMovesDown() {
         if (dinoGoesDown === 1) {
-            const dinosaur = document.getElementById((lineDino + 1) * HUNDRED + colDino);
+            const dinosaur = document.getElementById((lineDino + 1) + "-" + colDino);
             dinosaur.style.backgroundColor = "green";
-            const prevDino = document.getElementById(lineDino * HUNDRED + colDino);
+            const prevDino = document.getElementById(lineDino + "-" + colDino);
             prevDino.style.backgroundColor = "gray";
             ++lineDino;
         }
@@ -114,4 +114,3 @@ function dinosaurJumps() {
 }
 
 dinosaurJumps();
-     
