@@ -7,7 +7,7 @@ let lineObj = MAX_BOARD_LINES - 1;
 let dinoGoesDown = 0;
 let noObjects = 0;
 let movingUp, movingDown;
-let gameOver = 0;
+let gameOver = false;
 
 function generateButtons() {
     for (let i = 0; i < MAX_BOARD_LINES; ++i) {
@@ -41,14 +41,14 @@ function startStopWatch() {
 function dinoColided() {
     for (let i = 0; i <= noObjects; ++i) {
         if (lineDino === lineObj && colDino === colObject[i]) {
-            gameOver = 1;
+            gameOver = true;
         }
     }
 }
 
 function increaseTimeAndAddMoreObjects() {
     dinoColided();
-    if (gameOver === 0) {
+    if (gameOver === false) {
         ++time;
         if (time % 2 === 0) {
             colObject[++noObjects] = MAX_BOARD_COLS - 1;
@@ -59,7 +59,7 @@ function increaseTimeAndAddMoreObjects() {
 
 function moveObjectsLeft() {
     for (let i = 0; i <= noObjects; ++i) {
-        if (colObject[i] >= 0 && gameOver === 0) {
+        if (colObject[i] >= 0 && gameOver === false) {
             const object = document.getElementById(lineObj + "-" + colObject[i]);
             object.style.backgroundColor = "red";
             if (colObject[i] != MAX_BOARD_COLS - 1) {
@@ -77,39 +77,39 @@ function dinosaurJumps() {
 
     function checkKey(e) {
         textContent = e.code;
-        if (textContent === "ArrowUp" && gameOver === 0) {
+        if (textContent === "ArrowUp" && gameOver === false) {
             dinoGoesDown = 0;
             movingUp = setInterval(dinoMovesUp, ONE_SECOND / 10);
         }
     }
+}
 
-    function dinoMovesUp() {
-        if (dinoGoesDown === 0) {
-            const dinosaur = document.getElementById((lineDino - 1) + "-" + colDino);
-            dinosaur.style.backgroundColor = "green";
-            const prevDino = document.getElementById(lineDino + "-" + colDino);
-            prevDino.style.backgroundColor = "gray"; 
-            --lineDino;  
-        }  
-        if (lineDino === 0) {
-            clearInterval(movingUp);
-            dinoGoesDown = 1;
-            movingDown = setInterval(dinoMovesDown, ONE_SECOND / 10);
-        }  
-    }
+function dinoMovesUp() {
+    if (dinoGoesDown === 0) {
+        const dinosaur = document.getElementById((lineDino - 1) + "-" + colDino);
+        dinosaur.style.backgroundColor = "green";
+        const prevDino = document.getElementById(lineDino + "-" + colDino);
+        prevDino.style.backgroundColor = "gray"; 
+        --lineDino;  
+    }  
+    if (lineDino === 0) {
+        clearInterval(movingUp);
+        dinoGoesDown = 1;
+        movingDown = setInterval(dinoMovesDown, ONE_SECOND / 10);
+    }  
+}
      
-    function dinoMovesDown() {
-        if (dinoGoesDown === 1) {
-            const dinosaur = document.getElementById((lineDino + 1) + "-" + colDino);
-            dinosaur.style.backgroundColor = "green";
-            const prevDino = document.getElementById(lineDino + "-" + colDino);
-            prevDino.style.backgroundColor = "gray";
-            ++lineDino;
-        }
-        if (lineDino === MAX_BOARD_LINES - 1) {
-            clearInterval(movingDown);
-            dinoGoesDown = 0;
-        }
+function dinoMovesDown() {
+    if (dinoGoesDown === 1) {
+        const dinosaur = document.getElementById((lineDino + 1) + "-" + colDino);
+        dinosaur.style.backgroundColor = "green";
+        const prevDino = document.getElementById(lineDino + "-" + colDino);
+        prevDino.style.backgroundColor = "gray";
+        ++lineDino;
+    }
+    if (lineDino === MAX_BOARD_LINES - 1) {
+        clearInterval(movingDown);
+        dinoGoesDown = 0;
     }
 }
 
