@@ -72,16 +72,12 @@ function moveObjectsLeft() {
 }
 
 function dinosaurJumps() {
-    const input = document.querySelector("input");
-    input.addEventListener("keydown", checkKey);
-
-    function checkKey(e) {
-        textContent = e.code;
-        if (textContent === "ArrowUp" && gameOver === false) {
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowUp') {
             dinoGoesDown = 0;
             movingUp = setInterval(dinoMovesUp, ONE_SECOND / 10);
         }
-    }
+    });
 }
 
 function dinoMovesUp() {
