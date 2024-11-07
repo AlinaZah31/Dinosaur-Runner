@@ -4,10 +4,11 @@ let lineDino = MAX_BOARD_LINES - 1;
 let colDino = 2;
 let colObject = [MAX_BOARD_COLS - 1];
 let lineObj = MAX_BOARD_LINES - 1;
-let dinoGoesDown = 0;
+let dinoGoesDown = false;
 let noObjects = 0;
 let movingUp, movingDown;
 let gameOver = false;
+let jumping = false;
 
 function generateButtons() {
     for (let i = 0; i < MAX_BOARD_LINES; ++i) {
@@ -58,7 +59,8 @@ function increaseTimeAndAddMoreObjects() {
 }
 
 function moveObjectsLeft() {
-    for (let i = 0; i <= noObjects; ++i) {
+    dinoColided();
+    for (let i = 0; i <= noObjects && gameOver === false; ++i) {
         if (colObject[i] >= 0 && gameOver === false) {
             const object = document.getElementById(lineObj + "-" + colObject[i]);
             object.style.backgroundColor = "red";
@@ -73,40 +75,38 @@ function moveObjectsLeft() {
 
 function dinosaurJumps() {
     document.addEventListener('keydown', (event) => {
-        if (event.key === 'ArrowUp') {
-            dinoGoesDown = 0;
-            movingUp = setInterval(dinoMovesUp, ONE_SECOND / 10);
+        if (event.key === 'ArrowUp' && gameOver === false && dinoGoesDown === false 
+            && lineDino === MAX_BOARD_LINES - 1 && jumping === false) {
+            movingUp = setInterval(dinoMovesUp, ONE_SECOND / 10);     
         }
+        jumping = true;
     });
 }
 
+dinosaurJumps();
+
 function dinoMovesUp() {
-    if (dinoGoesDown === 0) {
         const dinosaur = document.getElementById((lineDino - 1) + "-" + colDino);
         dinosaur.style.backgroundColor = "green";
         const prevDino = document.getElementById(lineDino + "-" + colDino);
         prevDino.style.backgroundColor = "gray"; 
-        --lineDino;  
-    }  
-    if (lineDino === 0) {
+        --lineDino;
+    if (lineDino === 0 && dinoGoesDown === false) {
         clearInterval(movingUp);
-        dinoGoesDown = 1;
+        dinoGoesDown = true;
         movingDown = setInterval(dinoMovesDown, ONE_SECOND / 10);
     }  
 }
      
 function dinoMovesDown() {
-    if (dinoGoesDown === 1) {
         const dinosaur = document.getElementById((lineDino + 1) + "-" + colDino);
         dinosaur.style.backgroundColor = "green";
         const prevDino = document.getElementById(lineDino + "-" + colDino);
         prevDino.style.backgroundColor = "gray";
         ++lineDino;
-    }
-    if (lineDino === MAX_BOARD_LINES - 1) {
+    if (lineDino === MAX_BOARD_LINES - 1 && dinoGoesDown === true) {
         clearInterval(movingDown);
-        dinoGoesDown = 0;
+        dinoGoesDown = false;
+        jumping = false;
     }
 }
-
-dinosaurJumps();
