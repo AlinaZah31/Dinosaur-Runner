@@ -62,10 +62,12 @@ function moveObjectsLeft() {
     dinoColided();
     for (let i = 0; i <= noObjects && gameOver === false; ++i) {
         if (colObject[i] >= 0 && gameOver === false) {
-            const object = document.getElementById(lineObj + "-" + colObject[i]);
+            const object = document.getElementById(lineObj + "-" 
+                + colObject[i]);
             object.style.backgroundColor = "red";
             if (colObject[i] != MAX_BOARD_COLS - 1) {
-                const prevObject = document.getElementById(lineObj + "-" + (colObject[i] + 1));
+                const prevObject = document.getElementById(lineObj + "-" 
+                    + (colObject[i] + 1));
                 prevObject.style.backgroundColor = "gray";
             }
         }
@@ -86,11 +88,11 @@ function dinosaurJumps() {
 dinosaurJumps();
 
 function dinoMovesUp() {
-        const dinosaur = document.getElementById((lineDino - 1) + "-" + colDino);
-        dinosaur.style.backgroundColor = "green";
-        const prevDino = document.getElementById(lineDino + "-" + colDino);
-        prevDino.style.backgroundColor = "gray"; 
-        --lineDino;
+    const dinosaur = document.getElementById((lineDino - 1) + "-" + colDino);
+    dinosaur.style.backgroundColor = "green";
+    const prevDino = document.getElementById(lineDino + "-" + colDino);
+    prevDino.style.backgroundColor = "gray"; 
+    --lineDino;
     if (lineDino === 0 && dinoGoesDown === false) {
         clearInterval(movingUp);
         dinoGoesDown = true;
@@ -99,11 +101,11 @@ function dinoMovesUp() {
 }
      
 function dinoMovesDown() {
-        const dinosaur = document.getElementById((lineDino + 1) + "-" + colDino);
-        dinosaur.style.backgroundColor = "green";
-        const prevDino = document.getElementById(lineDino + "-" + colDino);
-        prevDino.style.backgroundColor = "gray";
-        ++lineDino;
+    const dinosaur = document.getElementById((lineDino + 1) + "-" + colDino);
+    dinosaur.style.backgroundColor = "green";
+    const prevDino = document.getElementById(lineDino + "-" + colDino);
+    prevDino.style.backgroundColor = "gray";
+    ++lineDino;
     if (lineDino === MAX_BOARD_LINES - 1 && dinoGoesDown === true) {
         clearInterval(movingDown);
         dinoGoesDown = false;
